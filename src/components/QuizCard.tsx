@@ -17,12 +17,19 @@ export function QuizCard({
   selectedAnswer,
   correctAnswer,
 }: QuizCardProps) {
+  let showPinyin = true;
+  try {
+    const v = window.localStorage.getItem('showPinyin');
+    showPinyin = v === null ? true : v === 'true';
+  } catch (e) {
+    showPinyin = true;
+  }
   return (
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
         <div className="text-center mb-8">
           <div className="text-8xl font-bold mb-4">{character.hanzi}</div>
-          <div className="text-2xl text-gray-600">{character.pinyin}</div>
+          {showPinyin && <div className="text-2xl text-gray-600">{character.pinyin}</div>}
         </div>
 
         <div className="space-y-3">

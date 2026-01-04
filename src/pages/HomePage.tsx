@@ -11,6 +11,14 @@ export function HomePage() {
     accuracy: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [showPinyin, setShowPinyin] = useState<boolean>(() => {
+    try {
+      const v = window.localStorage.getItem('showPinyin');
+      return v === null ? true : v === 'true';
+    } catch (e) {
+      return true;
+    }
+  });
 
   useEffect(() => {
     loadStats();
@@ -95,17 +103,36 @@ export function HomePage() {
           </div>
 
           <div className="space-y-4">
-            <button
-              onClick={startQuiz}
-              disabled={stats.totalCharacters === 0}
-              className={`w-full py-6 text-2xl font-bold rounded-xl transition-all ${
-                stats.totalCharacters > 0
-                  ? 'bg-blue-500 text-white hover:bg-blue-600 active:scale-95'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              }`}
-            >
-              {stats.totalCharacters > 0 ? 'Start Quiz' : 'No Characters Available'}
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={startQuiz}
+                disabled={stats.totalCharacters === 0}
+                className={`flex-1 py-6 text-2xl font-bold rounded-xl transition-all ${
+                  stats.totalCharacters > 0
+                    ? 'bg-blue-500 text-white hover:bg-blue-600 active:scale-95'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                {stats.totalCharacters > 0 ? 'Start Quiz' : 'No Characters Available'}
+              </button>
+
+              <button
+                onClick={() => {
+                  const v = !showPinyin;
+                  try {
+                    window.localStorage.setItem('showPinyin', String(v));
+                  } catch (e) {
+                    /* ignore */
+                  }
+                  setShowPinyin(v);
+                }}
+                className={`px-4 py-3 rounded-xl border ${
+                  showPinyin ? 'bg-blue-500 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-200'
+                }`}
+              >
+                {showPinyin ? 'Pinyin: On' : 'Pinyin: Off'}
+              </button>
+            </div>
 
             <button
               onClick={viewProgress}

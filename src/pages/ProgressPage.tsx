@@ -10,7 +10,7 @@ interface CharacterWithProgress {
 export function ProgressPage() {
   const [characters, setCharacters] = useState<CharacterWithProgress[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'new' | 'learning' | 'mastered'>('all');
+  const [filter, setFilter] = useState<'all' | 'learning' | 'mastered'>('all');
 
   useEffect(() => {
     loadProgress();
@@ -71,8 +71,8 @@ export function ProgressPage() {
         </div>
 
         <div className="bg-white rounded-xl shadow-md p-4 mb-6">
-          <div className="flex gap-2">
-            {(['all', 'new', 'learning', 'mastered'] as const).map((f) => (
+          <div className="flex gap-2 items-center">
+            {(['all', 'learning', 'mastered'] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
@@ -107,25 +107,36 @@ export function ProgressPage() {
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <div
-                    className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-1 ${
-                      progress.status === 'mastered'
-                        ? 'bg-green-100 text-green-800'
-                        : progress.status === 'learning'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-gray-100 text-gray-600'
-                    }`}
-                  >
-                    {progress.status}
+                <div className="flex items-center gap-2">
+                  <div className="text-right mr-2">
+                    <div
+                      className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-1 ${
+                        progress.status === 'mastered'
+                          ? 'bg-green-100 text-green-800'
+                          : progress.status === 'learning'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
+                      {progress.status}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      Reviews: {progress.reviewCount} / 7
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Accuracy: {progress.reviewCount > 0
+                        ? Math.round((progress.correctCount / progress.reviewCount) * 100)
+                        : 0}%
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-600">
-                    Reviews: {progress.reviewCount} / 7
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    Accuracy: {progress.reviewCount > 0
-                      ? Math.round((progress.correctCount / progress.reviewCount) * 100)
-                      : 0}%
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => (window.location.href = `/quiz?characterId=${character.id}`)}
+                      className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    >
+                      Quiz
+                    </button>
                   </div>
                 </div>
               </div>
